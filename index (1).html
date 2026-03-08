@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Audience Builder — Google Ads</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#070b13;font-family:'DM Sans','Segoe UI',sans-serif;color:#e2e8f0;min-height:100vh}
+  input::placeholder{color:#334155}
+  button{font-family:inherit;cursor:pointer}
+  ::-webkit-scrollbar{width:4px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:4px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState } = React;
+
+const IN_MARKET_DATA = [{"id":"80428","name":"Apparel & Accessories","path":"/Apparel & Accessories","children":[{"id":"80429","name":"Activewear","path":"/Apparel & Accessories/Activewear","children":[{"id":"80557","name":"Running Apparel","path":"/Apparel & Accessories/Activewear/Running Apparel","children":[]},{"id":"80558","name":"Yoga Apparel","path":"/Apparel & Accessories/Activewear/Yoga Apparel","children":[]}]},{"id":"80949","name":"Backpacks","path":"/Apparel & Accessories/Backpacks","children":[]},{"id":"80431","name":"Formal Wear","path":"/Apparel & Accessories/Formal Wear","children":[]},{"id":"80432","name":"Handbags","path":"/Apparel & Accessories/Handbags","children":[]},{"id":"80439","name":"Shoes","path":"/Apparel & Accessories/Shoes","children":[{"id":"80448","name":"Athletic Shoes","path":"/Apparel & Accessories/Shoes/Athletic Shoes","children":[]},{"id":"80449","name":"Boots","path":"/Apparel & Accessories/Shoes/Boots","children":[]},{"id":"80450","name":"Dress Shoes","path":"/Apparel & Accessories/Shoes/Dress Shoes","children":[]}]},{"id":"80440","name":"Swimwear","path":"/Apparel & Accessories/Swimwear","children":[]},{"id":"80442","name":"Women's Apparel","path":"/Apparel & Accessories/Women's Apparel","children":[]}]},{"id":"80001","name":"Autos & Vehicles","path":"/Autos & Vehicles","children":[{"id":"80469","name":"Auto Repair & Maintenance","path":"/Autos & Vehicles/Auto Repair & Maintenance","children":[]},{"id":"80097","name":"Motor Vehicles (New)","path":"/Autos & Vehicles/Motor Vehicles (New)","children":[]},{"id":"80099","name":"Motor Vehicles (Used)","path":"/Autos & Vehicles/Motor Vehicles (Used)","children":[]},{"id":"80012","name":"Hybrid & Alternative Vehicles","path":"/Autos & Vehicles/Hybrid & Alternative Vehicles","children":[]},{"id":"80106","name":"Luxury Vehicles","path":"/Autos & Vehicles/Luxury Vehicles","children":[]},{"id":"80051","name":"SUVs","path":"/Autos & Vehicles/SUVs","children":[]}]},{"id":"80546","name":"Beauty & Personal Care","path":"/Beauty & Personal Care","children":[{"id":"80554","name":"Makeup & Cosmetics","path":"/Beauty & Personal Care/Makeup & Cosmetics","children":[]},{"id":"80437","name":"Perfumes & Fragrances","path":"/Beauty & Personal Care/Perfumes & Fragrances","children":[]},{"id":"80555","name":"Skin Care Products","path":"/Beauty & Personal Care/Skin Care Products","children":[{"id":"80581","name":"Anti-Aging Skin Care","path":"/Beauty & Personal Care/Skin Care Products/Anti-Aging Skin Care","children":[]}]}]},{"id":"80463","name":"Business Services","path":"/Business Services","children":[{"id":"80535","name":"CRM Solutions","path":"/Business Services/CRM Solutions","children":[]},{"id":"80534","name":"Collaboration Tools","path":"/Business Services/Collaboration Tools","children":[]},{"id":"80529","name":"SEO & SEM Services","path":"/Business Services/SEO & SEM Services","children":[]}]},{"id":"80193","name":"Computers & Peripherals","path":"/Computers & Peripherals","children":[{"id":"80198","name":"Laptops & Notebooks","path":"/Computers & Peripherals/Laptops & Notebooks","children":[]},{"id":"80199","name":"Tablets","path":"/Computers & Peripherals/Tablets","children":[]}]},{"id":"80207","name":"Consumer Electronics","path":"/Consumer Electronics","children":[{"id":"80888","name":"Headphones & Headsets","path":"/Consumer Electronics/Headphones & Headsets","children":[]},{"id":"80286","name":"Mobile Phones","path":"/Consumer Electronics/Mobile Phones","children":[]}]},{"id":"80226","name":"Education","path":"/Education","children":[{"id":"80994","name":"Open Online Courses","path":"/Education/Open Online Courses","children":[]},{"id":"80228","name":"Post-Secondary Education","path":"/Education/Post-Secondary Education","children":[]}]},{"id":"80130","name":"Financial Services","path":"/Financial Services","children":[{"id":"80141","name":"Credit Cards","path":"/Financial Services/Credit Cards","children":[]},{"id":"80136","name":"Mortgage","path":"/Financial Services/Mortgage","children":[]},{"id":"80149","name":"Investment Services","path":"/Financial Services/Investment Services","children":[]}]},{"id":"80891","name":"Food","path":"/Food","children":[{"id":"80969","name":"Grocery Delivery","path":"/Food/Grocery Delivery","children":[]},{"id":"80972","name":"Meal Kits","path":"/Food/Meal Kits","children":[]},{"id":"80970","name":"Restaurant Delivery & Takeout","path":"/Food/Restaurant Delivery & Takeout","children":[]}]},{"id":"80237","name":"Home & Garden","path":"/Home & Garden","children":[{"id":"80490","name":"General Contracting & Remodeling","path":"/Home & Garden/General Contracting & Remodeling","children":[]},{"id":"80239","name":"Home Decor","path":"/Home & Garden/Home Decor","children":[]},{"id":"80241","name":"Home Improvement","path":"/Home & Garden/Home Improvement","children":[]},{"id":"80935","name":"Dog Food & Supplies","path":"/Home & Garden/Dog Food & Supplies","children":[]}]},{"id":"80928","name":"Media & Entertainment","path":"/Media & Entertainment","children":[{"id":"80933","name":"TV & Video Streaming","path":"/Media & Entertainment/TV & Video Streaming","children":[]},{"id":"80931","name":"Video Games","path":"/Media & Entertainment/Video Games","children":[]}]},{"id":"80131","name":"Real Estate","path":"/Real Estate","children":[{"id":"80155","name":"For Rent","path":"/Real Estate/For Rent","children":[]},{"id":"80202","name":"Houses (For Sale)","path":"/Real Estate/Houses (For Sale)","children":[]}]},{"id":"80276","name":"Software","path":"/Software","children":[{"id":"80279","name":"Business & Productivity Software","path":"/Software/Business & Productivity Software","children":[]},{"id":"80282","name":"Video Editing & Production Software","path":"/Software/Video Editing & Production Software","children":[]}]},{"id":"80545","name":"Sports & Fitness","path":"/Sports & Fitness","children":[{"id":"80589","name":"Cardio Training Equipment","path":"/Sports & Fitness/Cardio Training Equipment","children":[]},{"id":"80591","name":"Weights & Strength Training","path":"/Sports & Fitness/Weights & Strength Training","children":[]},{"id":"80561","name":"Gyms & Athletic Clubs","path":"/Sports & Fitness/Gyms & Athletic Clubs","children":[]},{"id":"80562","name":"Camping & Hiking Equipment","path":"/Sports & Fitness/Camping & Hiking Equipment","children":[]},{"id":"80569","name":"Golf Equipment","path":"/Sports & Fitness/Golf Equipment","children":[]}]},{"id":"80287","name":"Travel","path":"/Travel","children":[{"id":"80288","name":"Air Travel","path":"/Travel/Air Travel","children":[]},{"id":"80401","name":"4 Star Hotels","path":"/Travel/4 Star Hotels","children":[]},{"id":"80402","name":"5 Star Hotels","path":"/Travel/5 Star Hotels","children":[]},{"id":"80641","name":"Trips to Paris","path":"/Travel/Trips to Paris","children":[]},{"id":"80747","name":"Trips to Italy","path":"/Travel/Trips to Italy","children":[]}]}];
+
+const AFFINITY_DATA = [{"id":"93017","name":"Banking & Finance","path":"/Banking & Finance","children":[{"id":"92601","name":"Avid Investors","path":"/Banking & Finance/Avid Investors","children":[]},{"id":"93020","name":"Seeks Investment Advice","path":"/Banking & Finance/Seeks Investment Advice","children":[]}]},{"id":"93040","name":"Beauty & Wellness","path":"/Beauty & Wellness","children":[{"id":"92505","name":"Beauty Mavens","path":"/Beauty & Wellness/Beauty Mavens","children":[]},{"id":"93009","name":"Frequently Visits Salons","path":"/Beauty & Wellness/Frequently Visits Salons","children":[]}]},{"id":"93002","name":"Food & Dining","path":"/Food & Dining","children":[{"id":"93007","name":"Coffee Shop Regulars","path":"/Food & Dining/Coffee Shop Regulars","children":[]},{"id":"90800","name":"Cooking Enthusiasts","path":"/Food & Dining/Cooking Enthusiasts","children":[]},{"id":"92300","name":"Foodies","path":"/Food & Dining/Foodies","children":[]},{"id":"93003","name":"Frequently Dines Out","path":"/Food & Dining/Frequently Dines Out","children":[]},{"id":"92957","name":"Prefers Organic Food","path":"/Food & Dining/Prefers Organic Food","children":[]},{"id":"92955","name":"Vegetarians & Vegans","path":"/Food & Dining/Vegetarians & Vegans","children":[]}]},{"id":"92946","name":"Home & Garden","path":"/Home & Garden","children":[{"id":"90700","name":"Do-It-Yourselfers","path":"/Home & Garden/Do-It-Yourselfers","children":[]},{"id":"92508","name":"Home Decor Enthusiasts","path":"/Home & Garden/Home Decor Enthusiasts","children":[]}]},{"id":"94010","name":"Life Events","path":"/Life Events","children":[{"id":"94022","name":"Starting a Business Soon","path":"/Life Events/Starting a Business Soon","children":[]},{"id":"94006","name":"Getting Married Soon","path":"/Life Events/Getting Married Soon","children":[]},{"id":"94008","name":"Moving Soon","path":"/Life Events/Moving Soon","children":[]},{"id":"94033","name":"Purchasing a Home Soon","path":"/Life Events/Purchasing a Home Soon","children":[]}]},{"id":"92947","name":"Lifestyles & Hobbies","path":"/Lifestyles & Hobbies","children":[{"id":"92913","name":"Business Professionals","path":"/Lifestyles & Hobbies/Business Professionals","children":[]},{"id":"92504","name":"Fashionistas","path":"/Lifestyles & Hobbies/Fashionistas","children":[]},{"id":"90600","name":"Green Living Enthusiasts","path":"/Lifestyles & Hobbies/Green Living Enthusiasts","children":[]},{"id":"92958","name":"Mindfulness & Meditation Enthusiasts","path":"/Lifestyles & Hobbies/Mindfulness & Meditation Enthusiasts","children":[]},{"id":"90100","name":"Outdoor Enthusiasts","path":"/Lifestyles & Hobbies/Outdoor Enthusiasts","children":[]},{"id":"91102","name":"Dog Lovers","path":"/Lifestyles & Hobbies/Dog Lovers","children":[]},{"id":"90300","name":"Thrill Seekers","path":"/Lifestyles & Hobbies/Thrill Seekers","children":[]}]},{"id":"93034","name":"Media & Entertainment","path":"/Media & Entertainment","children":[{"id":"91601","name":"Hardcore Gamers","path":"/Media & Entertainment/Hardcore Gamers","children":[]},{"id":"91800","name":"Movie Lovers","path":"/Media & Entertainment/Movie Lovers","children":[]},{"id":"91900","name":"Music Lovers","path":"/Media & Entertainment/Music Lovers","children":[]},{"id":"92978","name":"Heavy Streaming Content Viewers","path":"/Media & Entertainment/Heavy Streaming Content Viewers","children":[]}]},{"id":"92901","name":"Shoppers","path":"/Shoppers","children":[{"id":"92503","name":"Bargain Hunters","path":"/Shoppers/Bargain Hunters","children":[]},{"id":"92501","name":"Luxury Shoppers","path":"/Shoppers/Luxury Shoppers","children":[]},{"id":"92500","name":"Shopping Enthusiasts","path":"/Shoppers/Shopping Enthusiasts","children":[]},{"id":"92502","name":"Value Shoppers","path":"/Shoppers/Value Shoppers","children":[]}]},{"id":"92950","name":"Sports & Fitness","path":"/Sports & Fitness","children":[{"id":"90400","name":"Health & Fitness Buffs","path":"/Sports & Fitness/Health & Fitness Buffs","children":[]},{"id":"92943","name":"Yoga Lovers","path":"/Sports & Fitness/Yoga Lovers","children":[]},{"id":"90216","name":"Running Enthusiasts","path":"/Sports & Fitness/Running Enthusiasts","children":[]},{"id":"90203","name":"Soccer Fans","path":"/Sports & Fitness/Soccer Fans","children":[]}]},{"id":"92948","name":"Technology","path":"/Technology","children":[{"id":"92911","name":"Social Media Enthusiasts","path":"/Technology/Social Media Enthusiasts","children":[]},{"id":"92507","name":"Technophiles","path":"/Technology/Technophiles","children":[]},{"id":"92926","name":"Home Automation Enthusiasts","path":"/Technology/Home Automation Enthusiasts","children":[]}]},{"id":"92945","name":"Travel","path":"/Travel","children":[{"id":"92924","name":"Business Travelers","path":"/Travel/Business Travelers","children":[]},{"id":"91501","name":"Luxury Travelers","path":"/Travel/Luxury Travelers","children":[]},{"id":"91502","name":"Family Vacationers","path":"/Travel/Family Vacationers","children":[]}]},{"id":"93028","name":"Vehicles & Transportation","path":"/Vehicles & Transportation","children":[{"id":"91400","name":"Performance & Luxury Vehicle Enthusiasts","path":"/Vehicles & Transportation/Performance & Luxury Vehicle Enthusiasts","children":[]},{"id":"92912","name":"Truck & SUV Enthusiasts","path":"/Vehicles & Transportation/Truck & SUV Enthusiasts","children":[]}]}];
+
+const OBJECTIVES = [
+  { id: "acquisition", label: "Acquisition", icon: "🎯", desc: "Nouveaux clients" },
+  { id: "notoriete", label: "Notoriété", icon: "📣", desc: "Visibilité" },
+  { id: "remarketing", label: "Remarketing", icon: "🔄", desc: "Recibler" },
+  { id: "conversion", label: "Conversion", icon: "⚡", desc: "Ventes" },
+];
+
+function flatAll(nodes, acc = []) {
+  for (const n of nodes) {
+    acc.push({ id: n.id, name: n.name, path: n.path });
+    if (n.children && n.children.length) flatAll(n.children, acc);
+  }
+  return acc;
+}
+const ALL_IM = flatAll(IN_MARKET_DATA);
+const ALL_AFF = flatAll(AFFINITY_DATA);
+
+async function callGroq(apiKey, prompt) {
+  const r = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` },
+    body: JSON.stringify({
+      model: "llama-3.3-70b-versatile",
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0.7,
+      max_tokens: 2048
+    })
+  });
+  const d = await r.json();
+  if (d.error) throw new Error(d.error.message);
+  const raw = d.choices?.[0]?.message?.content || "";
+  const match = raw.match(/\{[\s\S]*\}/);
+  if (!match) throw new Error("Réponse invalide, réessaie.");
+  return JSON.parse(match[0]);
+}
+
+function CopyBtn({ text, label = "Copier" }) {
+  const [ok, setOk] = useState(false);
+  return (
+    <button onClick={e => { e.stopPropagation(); navigator.clipboard.writeText(text); setOk(true); setTimeout(() => setOk(false), 1500); }}
+      style={{ background: ok ? "#22c55e22" : "rgba(255,255,255,0.06)", border: `1px solid ${ok ? "#22c55e60" : "rgba(255,255,255,0.12)"}`, color: ok ? "#22c55e" : "#64748b", borderRadius: "8px", padding: "5px 12px", fontSize: "11px", cursor: "pointer", transition: "all .2s" }}>
+      {ok ? "✓ Copié" : label}
+    </button>
+  );
+}
+
+function Chip({ label, color, onRemove }) {
+  return (
+    <span style={{ display: "inline-flex", alignItems: "center", gap: "5px", background: `${color}15`, border: `1px solid ${color}35`, color, borderRadius: "20px", padding: "3px 11px", fontSize: "12px", margin: "3px" }}>
+      {label}
+      {onRemove && <span onClick={onRemove} style={{ cursor: "pointer", opacity: 0.5, fontSize: "10px", marginLeft: "2px" }}>✕</span>}
+    </span>
+  );
+}
+
+function AudienceCard({ a, idx }) {
+  const [open, setOpen] = useState(false);
+  const colors = ["#6366f1", "#ec4899", "#f59e0b"];
+  const c = colors[idx % 3];
+  const txt = `AUDIENCE ${idx+1}: ${a.name}\n${a.description}\n\nRationale: ${a.rationale}\n\nMots-clés: ${(a.keywords||[]).join(", ")}\nURLs: ${(a.urls||[]).join(", ")}\nApps: ${(a.apps||[]).join(", ")}`;
+  return (
+    <div style={{ border: `1px solid ${open ? c+"50" : "rgba(255,255,255,0.08)"}`, borderRadius: "14px", marginBottom: "10px", overflow: "hidden", background: "rgba(255,255,255,0.02)", transition: "border-color .2s" }}>
+      <div onClick={() => setOpen(o => !o)} style={{ padding: "15px 18px", cursor: "pointer", display: "flex", alignItems: "center", gap: "12px" }}>
+        <div style={{ width: "32px", height: "32px", borderRadius: "8px", background: `${c}18`, border: `1px solid ${c}35`, display: "flex", alignItems: "center", justifyContent: "center", color: c, fontWeight: "800", fontSize: "13px", flexShrink: 0 }}>{idx+1}</div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ color: "#f1f5f9", fontWeight: "600", fontSize: "14px", marginBottom: "2px" }}>{a.name}</div>
+          <div style={{ color: "#475569", fontSize: "12px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{a.description}</div>
+        </div>
+        <div style={{ display: "flex", gap: "8px", alignItems: "center", flexShrink: 0 }}>
+          <CopyBtn text={txt} />
+          <span style={{ color: "#334155", fontSize: "16px", display: "inline-block", transform: open ? "rotate(180deg)" : "none", transition: "transform .2s" }}>↓</span>
+        </div>
+      </div>
+      {open && (
+        <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", padding: "14px 18px" }}>
+          <div style={{ background: `${c}0c`, border: `1px solid ${c}20`, borderRadius: "8px", padding: "10px 13px", marginBottom: "14px", color: "#94a3b8", fontSize: "12px", lineHeight: "1.6" }}>💡 {a.rationale}</div>
+          {[["🔍 Mots-clés", a.keywords, "#6366f1"], ["🌐 URLs", a.urls, "#10b981"], ["📱 Apps", a.apps, "#f59e0b"]].map(([lbl, items, col]) => (
+            <div key={lbl} style={{ marginBottom: "12px" }}>
+              <div style={{ color: "#334155", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "6px", fontWeight: "700" }}>{lbl}</div>
+              <div>{(items||[]).map((v,i) => <Chip key={i} label={v} color={col} />)}</div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ApiKeyScreen({ onSave }) {
+  const [key, setKey] = useState("");
+  const [show, setShow] = useState(false);
+  return (
+    <div style={{ minHeight: "100vh", background: "#070b13", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
+      <div style={{ maxWidth: "440px", width: "100%", animation: "fade .4s ease" }}>
+        <div style={{ textAlign: "center", marginBottom: "32px" }}>
+          <div style={{ width: "56px", height: "56px", borderRadius: "16px", background: "linear-gradient(135deg,#6366f1,#8b5cf6)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "24px", margin: "0 auto 16px" }}>🎯</div>
+          <h1 style={{ fontSize: "22px", fontWeight: "800", color: "#f1f5f9", marginBottom: "8px" }}>Audience Builder</h1>
+          <p style={{ color: "#475569", fontSize: "13px", lineHeight: "1.6" }}>Powered by Groq — 100% Gratuit</p>
+        </div>
+
+        <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "16px", padding: "24px" }}>
+          <div style={{ background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.15)", borderRadius: "10px", padding: "12px 14px", marginBottom: "20px" }}>
+            <div style={{ color: "#a5b4fc", fontSize: "12px", fontWeight: "700", marginBottom: "6px" }}>📋 Comment obtenir ta clé gratuite</div>
+            <ol style={{ color: "#64748b", fontSize: "12px", lineHeight: "1.8", paddingLeft: "16px" }}>
+              <li>Va sur <strong style={{ color: "#818cf8" }}>console.groq.com</strong></li>
+              <li>Crée un compte gratuit (pas de CB)</li>
+              <li>Clique sur <strong style={{ color: "#818cf8" }}>"API Keys"</strong> → <strong style={{ color: "#818cf8" }}>"Create API Key"</strong></li>
+              <li>Copie la clé et colle-la ici</li>
+            </ol>
+          </div>
+
+          <label style={{ display: "block", color: "#475569", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: "700", marginBottom: "8px" }}>
+            Ta clé API Gemini
+          </label>
+          <div style={{ position: "relative", marginBottom: "16px" }}>
+            <input
+              type={show ? "text" : "password"}
+              value={key}
+              onChange={e => setKey(e.target.value)}
+              placeholder="AIza..."
+              style={{ width: "100%", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "10px", padding: "11px 44px 11px 13px", color: "#f1f5f9", fontSize: "14px", outline: "none", fontFamily: "inherit", transition: "border-color .2s" }}
+              onFocus={e => e.target.style.borderColor = "#6366f1"}
+              onBlur={e => e.target.style.borderColor = "rgba(255,255,255,0.1)"}
+              onKeyDown={e => e.key === "Enter" && key.trim() && onSave(key.trim())}
+            />
+            <span onClick={() => setShow(s => !s)} style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", color: "#334155", cursor: "pointer", fontSize: "14px" }}>
+              {show ? "🙈" : "👁"}
+            </span>
+          </div>
+
+          <button onClick={() => key.trim() && onSave(key.trim())} disabled={!key.trim()}
+            style={{ width: "100%", background: key.trim() ? "linear-gradient(135deg,#6366f1,#8b5cf6)" : "rgba(255,255,255,0.04)", border: "none", borderRadius: "10px", padding: "13px", color: key.trim() ? "#fff" : "#2d3748", fontSize: "14px", fontWeight: "700", cursor: key.trim() ? "pointer" : "not-allowed", transition: "all .2s" }}>
+            Accéder à l'outil →
+          </button>
+
+          <div style={{ marginTop: "14px", color: "#1e293b", fontSize: "11px", textAlign: "center", lineHeight: "1.6" }}>
+            🔒 Ta clé reste dans ton navigateur · Jamais envoyée ailleurs · Gratuit sans CB
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const [apiKey, setApiKey] = useState("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");
+  const [brand, setBrand] = useState("");
+  const [product, setProduct] = useState("");
+  const [objective, setObjective] = useState("");
+  const [step, setStep] = useState("form");
+  const [error, setError] = useState(null);
+  const [audiences, setAudiences] = useState([]);
+  const [inMarket, setInMarket] = useState([]);
+  const [affinity, setAffinity] = useState([]);
+
+
+
+  const canSubmit = brand.trim() && product.trim() && objective;
+
+  async function generate() {
+    setStep("loading"); setError(null);
+    try {
+      const imList = ALL_IM.map(n => `${n.id}:${n.name}`).join(", ");
+      const affList = ALL_AFF.map(n => `${n.id}:${n.name}`).join(", ");
+      const ctx = `Marque: ${brand} | Produit: ${product} | Objectif: ${objective}`;
+
+      const prompt1 = `Tu es expert Google Ads. Réponds UNIQUEMENT en JSON valide sans markdown ni backticks.
+Format exact: {"audiences":[{"name":"string","description":"string court","rationale":"string court","keywords":["kw1","kw2","kw3","kw4","kw5"],"urls":["url1","url2","url3"],"apps":["app1","app2"]}]}
+Génère exactement 3 audiences personnalisées Google Ads distinctes pour: ${ctx}
+Mots-clés spécifiques en français, URLs et apps réelles existantes. Sois concis.`;
+
+      const prompt2 = `Tu es expert Google Ads. Réponds UNIQUEMENT en JSON valide sans markdown ni backticks.
+Format exact: {"inmarket":["id1","id2","id3","id4","id5"],"affinity":["id1","id2","id3","id4","id5"]}
+Contexte: ${ctx}
+IN-MARKET disponibles (id:nom): ${imList}
+AFFINITÉ disponibles (id:nom): ${affList}
+Retourne exactement 5 IDs In-Market et 5 IDs Affinité les plus pertinents.`;
+
+      const [p1, p2] = await Promise.all([
+        callGroq(apiKey, prompt1),
+        callGroq(apiKey, prompt2)
+      ]);
+
+      setAudiences(p1.audiences || []);
+      setInMarket((p2.inmarket || []).map(id => ALL_IM.find(n => n.id === id)).filter(Boolean));
+      setAffinity((p2.affinity || []).map(id => ALL_AFF.find(n => n.id === id)).filter(Boolean));
+      setStep("results");
+    } catch(e) {
+      setError(e.message);
+      setStep("form");
+    }
+  }
+
+  const inp = { width: "100%", boxSizing: "border-box", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "10px", padding: "11px 13px", color: "#f1f5f9", fontSize: "14px", outline: "none", fontFamily: "inherit", transition: "border-color .2s" };
+  const imExport = inMarket.map(s => `• ${s.path}`).join("\n");
+  const affExport = affinity.map(s => `• ${s.path}`).join("\n");
+  const fullExport = [audiences.map((a,i) => `[AUDIENCE ${i+1}] ${a.name}\nMots-clés: ${(a.keywords||[]).join(", ")}`).join("\n\n"), imExport ? `\n=== IN-MARKET ===\n${imExport}` : "", affExport ? `\n=== AFFINITÉ ===\n${affExport}` : ""].join("\n");
+
+  return (
+    <div style={{ minHeight: "100vh", background: "#070b13" }}>
+      <div style={{ borderBottom: "1px solid rgba(255,255,255,0.06)", padding: "14px 24px", display: "flex", alignItems: "center", gap: "10px", background: "rgba(255,255,255,0.015)", position: "sticky", top: 0, backdropFilter: "blur(10px)", zIndex: 10 }}>
+        <div style={{ width: "30px", height: "30px", borderRadius: "8px", background: "linear-gradient(135deg,#6366f1,#8b5cf6)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "14px" }}>🎯</div>
+        <div>
+          <div style={{ fontWeight: "700", fontSize: "13px", color: "#f1f5f9" }}>Audience Builder</div>
+          <div style={{ fontSize: "10px", color: "#334155" }}>Google Ads · Groq · Gratuit</div>
+        </div>
+        <div style={{ marginLeft: "auto", display: "flex", gap: "8px" }}>
+          {step === "results" && (
+            <button onClick={() => { setStep("form"); setAudiences([]); setInMarket([]); setAffinity([]); setError(null); }}
+              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "#64748b", borderRadius: "8px", padding: "5px 12px", fontSize: "11px" }}>
+              ← Retour
+            </button>
+          )}
+          <button onClick={() => { if(window.confirm("Changer de clé API ?")) setApiKey(""); }}
+            style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", color: "#334155", borderRadius: "8px", padding: "5px 10px", fontSize: "11px" }}>
+            🔑 Clé API
+          </button>
+        </div>
+      </div>
+
+      <div style={{ maxWidth: "700px", margin: "0 auto", padding: "28px 20px" }}>
+
+        {step === "form" && (
+          <div style={{ animation: "fade .35s ease" }}>
+            <div style={{ textAlign: "center", marginBottom: "28px" }}>
+              <h1 style={{ fontSize: "22px", fontWeight: "800", marginBottom: "8px", background: "linear-gradient(135deg,#f1f5f9,#6366f1)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", lineHeight: "1.3" }}>Génère ton plan d'audiences<br/>Google Ads complet</h1>
+              <p style={{ color: "#334155", fontSize: "13px" }}>3 audiences personnalisées + segments In-Market & Affinité sélectionnés par l'IA</p>
+            </div>
+
+            {error && (
+              <div style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.25)", borderRadius: "10px", padding: "12px 16px", color: "#f87171", fontSize: "13px", marginBottom: "18px" }}>
+                ⚠️ {error}
+              </div>
+            )}
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px", marginBottom: "16px" }}>
+              {[["Marque", brand, setBrand, "ex: Decathlon, Nike…"], ["Produit / Service", product, setProduct, "ex: chaussures de running…"]].map(([label, val, set, ph]) => (
+                <div key={label}>
+                  <label style={{ display: "block", color: "#475569", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: "700", marginBottom: "6px" }}>{label}</label>
+                  <input value={val} onChange={e => set(e.target.value)} placeholder={ph} style={inp}
+                    onFocus={e => e.target.style.borderColor = "#6366f1"} onBlur={e => e.target.style.borderColor = "rgba(255,255,255,0.1)"} />
+                </div>
+              ))}
+            </div>
+
+            <div style={{ marginBottom: "24px" }}>
+              <label style={{ display: "block", color: "#475569", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: "700", marginBottom: "8px" }}>Objectif de campagne</label>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "8px" }}>
+                {OBJECTIVES.map(o => (
+                  <div key={o.id} onClick={() => setObjective(o.id)}
+                    style={{ padding: "12px 8px", borderRadius: "10px", border: `1px solid ${objective === o.id ? "#6366f1" : "rgba(255,255,255,0.07)"}`, background: objective === o.id ? "rgba(99,102,241,0.1)" : "rgba(255,255,255,0.02)", cursor: "pointer", textAlign: "center", transition: "all .15s" }}>
+                    <div style={{ fontSize: "20px", marginBottom: "5px" }}>{o.icon}</div>
+                    <div style={{ color: objective === o.id ? "#a5b4fc" : "#94a3b8", fontWeight: "600", fontSize: "12px" }}>{o.label}</div>
+                    <div style={{ color: "#334155", fontSize: "10px", marginTop: "2px" }}>{o.desc}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <button onClick={() => canSubmit && generate()} disabled={!canSubmit}
+              style={{ width: "100%", background: canSubmit ? "linear-gradient(135deg,#6366f1,#8b5cf6)" : "rgba(255,255,255,0.04)", border: "none", borderRadius: "12px", padding: "14px", color: canSubmit ? "#fff" : "#2d3748", fontSize: "15px", fontWeight: "700", cursor: canSubmit ? "pointer" : "not-allowed" }}>
+              ✨ Générer mon plan d'audiences complet
+            </button>
+          </div>
+        )}
+
+        {step === "loading" && (
+          <div style={{ textAlign: "center", padding: "100px 0", animation: "fade .3s ease" }}>
+            <div style={{ width: "48px", height: "48px", border: "3px solid rgba(99,102,241,0.15)", borderTop: "3px solid #6366f1", borderRadius: "50%", margin: "0 auto 22px", animation: "spin .7s linear infinite" }}></div>
+            <div style={{ color: "#6366f1", fontWeight: "700", fontSize: "16px", marginBottom: "8px" }}>Génération en cours…</div>
+            <div style={{ color: "#334155", fontSize: "13px" }}>Audiences personnalisées + In-Market + Affinité</div>
+          </div>
+        )}
+
+        {step === "results" && (
+          <div style={{ animation: "fade .4s ease" }}>
+            <div style={{ background: "rgba(99,102,241,0.07)", border: "1px solid rgba(99,102,241,0.18)", borderRadius: "12px", padding: "14px 18px", marginBottom: "22px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px" }}>
+              <div>
+                <div style={{ color: "#a5b4fc", fontWeight: "700", fontSize: "14px" }}>Plan généré pour <span style={{ color: "#818cf8" }}>{brand}</span></div>
+                <div style={{ color: "#334155", fontSize: "12px", marginTop: "2px" }}>{product} · {OBJECTIVES.find(o=>o.id===objective)?.label}</div>
+              </div>
+              <CopyBtn text={fullExport} label="Tout exporter" />
+            </div>
+
+            <div style={{ color: "#475569", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: "700", marginBottom: "10px" }}>🎯 Audiences personnalisées</div>
+            {audiences.map((a, i) => <AudienceCard key={i} a={a} idx={i} />)}
+
+            <div style={{ marginTop: "26px", paddingTop: "22px", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+              <div style={{ color: "#475569", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: "700", marginBottom: "16px" }}>✨ Segments recommandés par l'IA</div>
+
+              {inMarket.length > 0 && (
+                <div style={{ background: "rgba(99,102,241,0.04)", border: "1px solid rgba(99,102,241,0.12)", borderRadius: "12px", padding: "14px 16px", marginBottom: "12px" }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
+                    <div style={{ color: "#6366f1", fontSize: "11px", fontWeight: "700", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                      🛒 In-Market <span style={{ background: "rgba(99,102,241,0.2)", borderRadius: "10px", padding: "1px 7px", fontSize: "10px" }}>{inMarket.length}</span>
+                    </div>
+                    <CopyBtn text={`=== IN-MARKET ===\n${imExport}`} label="Exporter" />
+                  </div>
+                  <div>{inMarket.map(s => <Chip key={s.id} label={s.name} color="#6366f1" onRemove={() => setInMarket(prev => prev.filter(x => x.id !== s.id))} />)}</div>
+                </div>
+              )}
+
+              {affinity.length > 0 && (
+                <div style={{ background: "rgba(236,72,153,0.04)", border: "1px solid rgba(236,72,153,0.12)", borderRadius: "12px", padding: "14px 16px" }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
+                    <div style={{ color: "#ec4899", fontSize: "11px", fontWeight: "700", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                      💜 Affinité <span style={{ background: "rgba(236,72,153,0.2)", borderRadius: "10px", padding: "1px 7px", fontSize: "10px" }}>{affinity.length}</span>
+                    </div>
+                    <CopyBtn text={`=== AFFINITÉ ===\n${affExport}`} label="Exporter" />
+                  </div>
+                  <div>{affinity.map(s => <Chip key={s.id} label={s.name} color="#ec4899" onRemove={() => setAffinity(prev => prev.filter(x => x.id !== s.id))} />)}</div>
+                </div>
+              )}
+            </div>
+
+            <div style={{ marginTop: "18px", padding: "12px 16px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "10px", color: "#334155", fontSize: "11px", lineHeight: "1.7" }}>
+              💡 <strong style={{ color: "#475569" }}>Personnalisées</strong> → Google Ads → Outils → Gestionnaire d'audiences → Créer &nbsp;·&nbsp; <strong style={{ color: "#475569" }}>In-Market / Affinité</strong> → Onglet Audiences dans ta campagne Display ou Demand Gen
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
